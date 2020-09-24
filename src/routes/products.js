@@ -52,6 +52,7 @@ router.post('/add', async (req, res)=>{
     }
     
     await pool.query('INSERT INTO productos set ?', [datos]);
+    req.flash('success', 'Productos Agregados');
     res.send('datos enviados');
 });
 

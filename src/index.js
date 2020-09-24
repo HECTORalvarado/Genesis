@@ -2,9 +2,14 @@ const express = require('express');
 const morgan = require('morgan');
 const exhdbs = require('express-handlebars');
 const path = require('path');
+const flash = require('connect-flash');
+const session = require ('express-session');
+const mysqlStore = require('express-mysql-session');
 const { urlencoded } = require('express');
 const passport = require('passport');
 const { use } = require('passport');
+const MySQLStore = require('express-mysql-session');
+const { database } = require('./keys');
 
 /* Inicializaciones */
 
@@ -26,9 +31,16 @@ app.set('view engine','.hbs');
 
 /* Midllewares */
 
+app.use(session({
+    secret: 'admin',
+    resave: false,
+    saveUninitialized: false,
+    store: new MySQLStore(database)
+}))
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
+app.use(flash());
 
     // passport //
 app.use(passport.initialize());
@@ -38,6 +50,7 @@ app.use(passport.session());
 
 app.use((req, res, next) => {
     next();
+    app.locals.success = req.flash('success');
 });
 
 /* Rutas */
