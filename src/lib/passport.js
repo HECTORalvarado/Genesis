@@ -1,31 +1,41 @@
 const passport = require('passport');
 const pool = require('../database');
-const LocalStartegy = require('passport-local').Strategy;
-const helpers = require('../lib/helpers');
+const LocalStrategy = require('passport-local').Strategy;
+const helpers = require('./helpers');
 
-require('../database')
+passport.use(
+	'local.signup',
+	new LocalStrategy(
+		{
+			usernameField: 'username',
+			passwordField: 'password',
+			passReqToCallback: true
+		},
+		async (req, done) => {
+			const { username, password, email, f_name, l_name, edad } = req.body;
+			let newUser = {
+				username,
+				password,
+				email,
+				f_name,
+				l_name,
+				edad
+			};
+			newUser.password = await helpers.encryptPass(password);
 
-passport.use('local.signup', new LocalStartegy({
-    usernameField: 'username',
-    passwordField: 'password',
-    passReqToCallback: true
-}, async ( req, username, password, done)=> {
-    const {email, f_name, l_name, edad} = req.body;
-    const newUser = {
-        username,
-        password,
-        email,
-        f_name,
-        l_name,
-        edad
-    }
-    newUser.password = await helpers.encryptPass(password);
+			const result = await pool.query('INSERT INTO usuario SET ?', newUser);
+			newUser.id = result.insertId;
+			//req.flash('success', 'Usuario Agregado');
+			return done(null, newUser);
+		}
+	)
+);
 
-    await pool.query('INSERT INTO usuario SET ?', [newUser]);
-    req.flash('success', 'Usuario Agregado');
-    
-}));
+passport.serializeUser((user, done)=> {
+	done(null, user.id);
+});
 
-/* passport.serializeUser((usr, done)=> {
-
-}); */
+passport.deserializeUser(async (id, done)=>{
+	const rows = await pool.query('SELECT * FROM usuario WHERE id = ?', [id]);
+	done(null, rows[0]);
+});
