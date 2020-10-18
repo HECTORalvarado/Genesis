@@ -11,8 +11,8 @@ passport.use(
 			passwordField: 'password',
 			passReqToCallback: true
 		},
-		async (req, done) => {
-			const { username, password, email, f_name, l_name, edad } = req.body;
+		async (req, username, password, done) => {
+			const { email, f_name, l_name, edad } = req.body;
 			let newUser = {
 				username,
 				password,
@@ -22,7 +22,7 @@ passport.use(
 				edad
 			};
 			newUser.password = await helpers.encryptPass(password);
-
+			/* Guarda en la DB */
 			const result = await pool.query('INSERT INTO usuario SET ?', newUser);
 			newUser.id = result.insertId;
 			//req.flash('success', 'Usuario Agregado');
