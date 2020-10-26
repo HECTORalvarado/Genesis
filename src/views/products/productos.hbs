@@ -1,3 +1,6 @@
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
 <div class="container p-4">
     <div class="row">
         {{#each product}}
@@ -12,17 +15,32 @@
                 <div class="card-body">
                     <p class="card-text">
                         {{descripcion}}
-                        <div class="row">
-                            <p class="col">Precio: {{precio}}</p>
-                            <p class="col">Disponibles: {{cantidad}}</p>
-                        </div>
+                    <div class="row">
+                        <p class="col">Precio: {{precio}}</p>
+                        <p class="col">Disponibles: {{cantidad}}</p>
+                    </div>
                     </p>
                     <div class="text-center">
-                        <button class="btn btn-success">Agregar al carrito</button>
+                        <form action="/checkout" method="POST">
+                            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                data-key="pk_test_51HfVBhHeZ8a6bHaCA6q50LNF7Rl3M8g217DLB1igbHip7mQgJ4HxnW99U4RB2KPc62If1NKAiY7V2Ys69YsJxrmi00MbB1f0Zw"
+                                data-amount="{{precioCent}}" data-name="Genesis" data-description="{{descripcion}}"
+                                data-image="" data-locale="auto">
+                                </script>
+                                <input type="number" style="display:none;" name="id" value="{{id}}" readonly>
+                            <button type="submit" class="btn btn-dark btn-block">
+                                Comprar <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            for (let i = 0; i <= {{ id }}; i++) {
+                document.getElementsByClassName("stripe-button-el")[i].style.display = 'none';
+            }
+        </script>
         {{/each}}
     </div>
 </div>

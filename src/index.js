@@ -56,12 +56,15 @@ app.use(passport.session());
 app.use((req, res, next) => {
 	next();
 	app.locals.success = req.flash("success");
+	app.locals.message = req.flash("message");
+	app.locals.user = req.user;
 });
 
 /* Rutas */
 
 app.use(require("./routes"));
 app.use(require("./routes/authentication"));
+app.use(require("./routes/checkout"));
 app.use("/products", require("./routes/products"));
 
 /* publico */

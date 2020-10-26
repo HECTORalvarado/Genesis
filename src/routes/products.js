@@ -8,7 +8,6 @@ router.get("/add", (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-	console.log(req.body);
 	const { titulo, img, descripcion, precio, cantidad, cat_id, search } = req.body;
 	if ({ search }) {
 		const product = await pool.query('SELECT * FROM productos WHERE titulo like ?', '%'+[search]+'%');
@@ -62,7 +61,11 @@ router.post("/add", async (req, res) => {
 });
 /* Muestra los productos disponibles */
 router.get('/', async (req, res) => {
-	const product = await pool.query('SELECT * FROM productos');
+	let product = await pool.query('SELECT * FROM productos');
+	for (let index = 0; index < Object.keys(product).length; index++) {
+		product[index].precioCent = product[index].precio * 100;
+	}
+
 	res.render('products/productos', { product });
 });
 
