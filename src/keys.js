@@ -1,8 +1,8 @@
 module.exports = {
     database: {
-        host: 'sql10.freemysqlhosting.net',
-        user: 'sql10373053',
-        password: 'GYhsCEPjcT',
-        database: 'sql10373053'
+        host: 'b1mwgenntsblfjgnvf5i-mysql.services.clever-cloud.com',
+        user: 'u7lrlgdjinz8j2rg',
+        password: 'dYBh5NcV1N1kRvvZsGC0',
+        database: 'b1mwgenntsblfjgnvf5i'
     }
 }
