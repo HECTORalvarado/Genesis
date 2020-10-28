@@ -64,6 +64,7 @@ router.post("/add", async (req, res) => {
 /* Muestra los productos disponibles */
 router.get('/', async (req, res) => {
 	let product = await pool.query('SELECT * FROM productos');
+	console.log(product[0].img);
 	for (let index = 0; index < Object.keys(product).length; index++) {
 		product[index].precioCent = product[index].precio * 100;
 	}

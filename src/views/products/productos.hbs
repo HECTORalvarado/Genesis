@@ -1,8 +1,8 @@
-<div class="container p-4">
+<div class="container p-4 m-4">
     <div class="row">
         {{#each product}}
         <div class="col">
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 20rem;">
                 <img src="{{img}}" loading="lazy" class="card-img-top" alt="">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -33,6 +33,7 @@
                 </div>
             </div>
         </div>
+        <br>
         <script>
             for (let i = 0; i <= {{ id }}; i++) {
                 document.getElementsByClassName("stripe-button-el")[i].style.display = 'none';
