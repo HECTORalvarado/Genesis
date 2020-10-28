@@ -8,19 +8,19 @@ router.get("/add", (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-	const { titulo, img, descripcion, precio, cantidad, cat_id, search } = req.body;
-	if ({ search }) {
-		const product = await pool.query('SELECT * FROM productos WHERE titulo like ?', '%'+[search]+'%');
+	let datos = req.body;
+	if ( datos.search ) {
+		const product = await pool.query('SELECT * FROM productos WHERE titulo like ?', '%'+datos.search+'%');
 		res.render('products/productos', { product });
 	} else {
-		let datos = {
+		/* let datos = {
 			titulo,
 			img,
 			descripcion,
 			precio,
 			cantidad,
 			cat_id,
-		};
+		}; */
 		/* Cambia de categoria a id para que se guarde en la DB */
 		switch (datos.cat_id) {
 			case "calzado_dama":
@@ -56,7 +56,9 @@ router.post("/add", async (req, res) => {
 		}
 		/* Agrega un producto a la DB */
 		await pool.query("INSERT INTO productos set ?", [datos]);
+		console.log([datos]);
 		req.flash("success", "Productos Agregados");
+		res.render('products/productos');
 	}
 });
 /* Muestra los productos disponibles */
