@@ -3,6 +3,7 @@ const pool = require("../database");
 const router = express.Router();
 const stripe = require('stripe')('sk_test_51HfVBhHeZ8a6bHaCizPDE6eZxE0zNftnGU9pD4gOgOJu3QWHb7lSvQ7OthFgOE2zaPfctI8Gh4RsP7cSZ3sQDQzA00rxYBr1s9');
 
+
 router.post('/checkout', async (req, res)=> {
 
     const customer = await stripe.customers.create({

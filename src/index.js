@@ -27,7 +27,7 @@ app.engine(
 		layoutsDir: path.join(app.get("views"), "layouts"),
 		partialsDir: path.join(app.get("views"), "partials"),
 		extname: ".hbs",
-		helpers: require("./lib/handelbars"),
+		//helpers: require("./lib/handelbars"),
 	})
 );
 app.set("view engine", ".hbs");
