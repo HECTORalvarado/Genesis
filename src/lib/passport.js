@@ -7,13 +7,13 @@ passport.use('local.signin', new LocalStrategy({
 	usernameField: 'username',
 	passwordField: 'password',
 	passReqToCallback: true
-}, async (req, username, password, done)=>{
+}, async (req, username, password, done) => {
 	const rows = await pool.query('SELECT * FROM usuario where username = ?', [username]);
-	if(rows.length > 0){
+	if (rows.length > 0) {
 		const user = rows[0];
 		const validPass = await helpers.matchPass(password, user.password);
 		if (validPass) {
-			done(null, user, req.flash('success', 'Bienvenido '+ user.username));
+			done(null, user, req.flash('success', 'Bienvenido ' + user.username));
 		} else {
 			console.log('pass incorecta')
 			done(null, false, req.flash('message', 'Contraseña incorecta'));
@@ -33,32 +33,32 @@ passport.use(
 			passReqToCallback: true
 		},
 		async (req, username, password, done) => {
-			
+
 			const { email, f_name, l_name, edad } = req.body;
-					let newUser = {
-						username,
-						password,
-						email,
-						f_name,
-						l_name,
-						edad
-					};
-			
-			const userName = await pool.query('SELECT * FROM usuario');
-				// Comprueba si hay usuarios con el mismo username
-				if (userName === newUser.username) {
-					console.log('El usuario ya existe');
-					return done(null, false,
-						req.flash('message', 'El usuario ya existe'));
-				} else {		
-					newUser.password = await helpers.encryptPass(password);
-					/* Guarda en la DB */
-					const result = await pool.query('INSERT INTO usuario SET ?', newUser);
-					newUser.id = result.insertId;
-					req.flash('success', 'Usuario Agregado');
-					return done(null, newUser);
-				}
-			
+			let newUser = {
+				username,
+				password,
+				email,
+				f_name,
+				l_name,
+				edad
+			};
+
+			const userName = await pool.query('SELECT username FROM usuario where username = ?', newUser.username);
+			// Comprueba si hay usuarios con el mismo username
+			if (userName[0].username === newUser.username) {
+				console.log('El usuario ya existe');
+				return done(null, false,
+					req.flash('message', 'El usuario ya existe'));
+			} else {
+				newUser.password = await helpers.encryptPass(password);
+				/* Guarda en la DB */
+				const result = await pool.query('INSERT INTO usuario SET ?', newUser);
+				newUser.id = result.insertId;
+				req.flash('success', 'Usuario Agregado');
+				return done(null, newUser);
+			}
+
 		}
 	)
 );
