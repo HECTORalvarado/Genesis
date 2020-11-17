@@ -46,19 +46,18 @@ passport.use(
 
 			const userName = await pool.query('SELECT username FROM usuario where username = ?', newUser.username);
 			// Comprueba si hay usuarios con el mismo username
-			if (userName[0].username === newUser.username) {
-				console.log('El usuario ya existe');
-				return done(null, false,
-					req.flash('message', 'El usuario ya existe'));
-			} else {
+			if (userName[0]) {
+				if (userName[0].username === newUser.username) {
+					console.log('El usuario ya existe');
+					return done(null, false, req.flash('message', 'El usuario ya existe'));
+			}} else { 
 				newUser.password = await helpers.encryptPass(password);
 				/* Guarda en la DB */
 				const result = await pool.query('INSERT INTO usuario SET ?', newUser);
 				newUser.id = result.insertId;
 				req.flash('success', 'Usuario Agregado');
 				return done(null, newUser);
-			}
-
+			}	
 		}
 	)
 );
